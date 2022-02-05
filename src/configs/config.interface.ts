@@ -29,7 +29,7 @@ export interface SwaggerConfig {
 export interface GraphqlConfig {
   playgroundEnabled: boolean;
   debug: boolean;
-  schemaDestination: string;
+  schemaDestination: string | boolean;
   sortSchema: boolean;
 }
 

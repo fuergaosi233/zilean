@@ -18,7 +18,10 @@ const config: Config = {
   graphql: {
     playgroundEnabled: true,
     debug: true,
-    schemaDestination: './src/schema.graphql',
+    // If is pord generate schema in memeory.
+    // https://docs.nestjs.com/graphql/quick-start#code-first
+    schemaDestination:
+      process.env.NODE_ENV == 'production' ? true : './src/schema.graphql',
     sortSchema: true,
   },
   security: {
