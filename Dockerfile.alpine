@@ -19,6 +19,18 @@ FROM node:14-alpine
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
+# Install the Doppler CLI
+# Does not rely on package managers
+# GnuPG package required
+RUN (curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sh -s -- --verify-signature
 
+# Pass `DOPPLER_TOKEN` at build time to create an encrypted snapshot for high-availability
+ARG DOPPLER_TOKEN
+
+# Create encrypted snapshot for high availability
+RUN doppler secrets download doppler.encrypted.json
+
+# Fetch secrets and print them using "printenv" command
+ENTRYPOINT ["doppler", "run", "--fallback=doppler.encrypted.json", "--"]
 EXPOSE 3000
 CMD [ "npm", "run", "start:prod" ]
