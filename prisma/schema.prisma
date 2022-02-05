@@ -1,0 +1,63 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  // previewFeatures = []
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+model Book {
+  id        Int              @id @default(autoincrement())
+  bookId    String           @unique
+  version   Int              @default(0)
+  cover     String
+  title     String
+  author    String
+  createAt  DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  wxUsers   WxUsersOnBooks[]
+}
+
+model BookMark {
+  id          Int      @id @default(autoincrement())
+  bookVersion Int
+  style       Int
+  range       String
+  markText    String
+  bookmarkId  String
+  createTime  DateTime
+  chapterUid  String
+  userVid     Int
+  wxUser      WxUser   @relation(fields: [userVid], references: [userVid])
+}
+
+model WxUser {
+  id           Int              @id @default(autoincrement())
+  userVid      Int              @unique
+  name         String
+  avatar       String
+  cookies      String?
+  accessToken  String?
+  refreshToken String?
+  createAt     DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  bookMark     BookMark[]
+  books        WxUsersOnBooks[]
+}
+
+model WxUsersOnBooks {
+  book      Book     @relation(fields: [bookId], references: [bookId])
+  bookId    String // relation scalar field (used in the `@relation` attribute above)
+  wxUser    WxUser   @relation(fields: [userVid], references: [userVid])
+  userVid   Int // relation scalar field (used in the `@relation` attribute above)
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([bookId, userVid])
+}

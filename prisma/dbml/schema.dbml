@@ -1,0 +1,61 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Book {
+  id Int [pk, increment]
+  bookId String [unique, not null]
+  version Int [not null, default: 0]
+  cover String [not null]
+  title String [not null]
+  author String [not null]
+  createAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  wxUsers WxUsersOnBooks [not null]
+}
+
+Table BookMark {
+  id Int [pk, increment]
+  bookVersion Int [not null]
+  style Int [not null]
+  range String [not null]
+  markText String [not null]
+  bookmarkId String [not null]
+  createTime DateTime [not null]
+  chapterUid String [not null]
+  userVid Int [not null]
+  wxUser WxUser [not null]
+}
+
+Table WxUser {
+  id Int [pk, increment]
+  userVid Int [unique, not null]
+  name String [not null]
+  avatar String [not null]
+  cookies String
+  accessToken String
+  refreshToken String
+  createAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  bookMark BookMark [not null]
+  books WxUsersOnBooks [not null]
+}
+
+Table WxUsersOnBooks {
+  book Book [not null]
+  bookId String [not null]
+  wxUser WxUser [not null]
+  userVid Int [not null]
+  createAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (bookId, userVid) [pk]
+  }
+}
+
+Ref: BookMark.userVid > WxUser.userVid
+
+Ref: WxUsersOnBooks.bookId > Book.bookId
+
+Ref: WxUsersOnBooks.userVid > WxUser.userVid
