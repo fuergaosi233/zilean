@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Module, OnModuleInit } from '@nestjs/common';
-import { WxReadConsumer } from './processors/wx-read.processor'
+import { WxReadConsumer } from './processors/wx-read.processor';
 @Module({
   imports: [AppModule],
   providers: [WxReadConsumer],

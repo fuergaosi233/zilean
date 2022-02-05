@@ -1,4 +1,6 @@
 import { Config } from './config.interface';
+import * as Redis from 'ioredis';
+
 const config: Config = {
   nest: {
     port: 3000,
@@ -25,10 +27,11 @@ const config: Config = {
     bcryptSaltOrRound: 10,
   },
   bull: {
-    redis: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: Number(process.env.REDIS_PORT || 6379),
-      password: process.env.REDIS_PASSWORD,
+    createClient: () => {
+      return new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+        maxRetriesPerRequest: null,
+        enableReadyCheck: false,
+      });
     },
     limiter: {
       max: 1000,

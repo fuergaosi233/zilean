@@ -273,7 +273,7 @@ async function main() {
   const userInfo = await getUserInfo(298329854, cookie);
   console.log(userInfo);
   const value = await getAllInfos(cookie);
-  const bookId = value.shelf.books[0].bookId
+  const bookId = value.shelf.books[0].bookId;
   const bookMark = await getAllBookMark(bookId, 1, cookie);
   console.log(bookMark);
 }
